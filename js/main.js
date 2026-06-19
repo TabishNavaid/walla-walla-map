@@ -1,0 +1,727 @@
+  // ==============================================================
+  // BUILDING DATA
+  // ==============================================================
+  // Each object represents one commercial property in the downtown
+  // district. Fields:
+  //   id       — unique identifier (used as object key in leafletMarkers)
+  //   name     — street address (displayed as the title)
+  //   lat/lng  — GPS coordinates for the map marker
+  //   location — source and confidence for the marker position
+  //   status   — "Vacant" | "Partial" | "Occupied"
+  //   sqft     — total building square footage
+  //   rent     — asking monthly rent in USD (null if occupied/unknown)
+  //   type     — "Retail" | "Office" | "Mixed-use"
+  //   contact  — property manager name (null if occupied)
+  //   phone    — contact phone number (null if occupied)
+  //   email    — contact email (null if occupied)
+  //   photo    — local Walla Walla reference image path for the prototype
+  //   photoAlt — meaningful description of the reference image
+  //   notes    — free-text description shown in the detail panel
+  //
+  // NOTE: In a production version, this array would be replaced by
+  // a fetch() call to a backend API or a Google Sheets endpoint.
+  // ==============================================================
+
+  const buildings = [
+    {
+      id: 1, name: "112 E Main St",
+      lat: 46.0681018, lng: -118.3370044,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-01.jpg",
+      photoAlt: "Downtown Walla Walla storefront along Main Street",
+      status: "Vacant", sqft: 2400, rent: 1800, type: "Retail",
+      contact: "John Smith Properties", phone: "(509) 555-0101", email: "jsmith@example.com",
+      notes: "Corner unit with excellent foot traffic. Updated electrical, 14ft ceilings. Well-suited for a restaurant or boutique retail concept."
+    },
+    {
+      id: 2, name: "124 E Main St",
+      lat: 46.0684191, lng: -118.3364613,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
+      photoAlt: "Historic downtown Walla Walla storefront facade",
+      status: "Occupied", sqft: 1800, rent: null, type: "Retail",
+      contact: null, phone: null, email: null,
+      notes: "Currently operating as a restaurant."
+    },
+    {
+      id: 3, name: "203 W Main St",
+      lat: 46.0655388, lng: -118.3420822,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
+      photoAlt: "Historic downtown Walla Walla storefront facade",
+      status: "Vacant", sqft: 3200, rent: 2200, type: "Mixed-use",
+      contact: "WW Commercial Realty", phone: "(509) 555-0198", email: "info@wwcommercial.com",
+      notes: "Ground floor retail with upper floor office space. Exposed brick interior. Rear alley loading access."
+    },
+    {
+      id: 4, name: "118 N Colville St",
+      lat: 46.0687870, lng: -118.3386266,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-retail-corridor-01.jpg",
+      photoAlt: "Commercial building along a Walla Walla retail corridor",
+      status: "Partial", sqft: 5000, rent: 1500, type: "Office",
+      contact: "Cascade Properties", phone: "(509) 555-0142", email: "cascade@example.com",
+      notes: "2nd floor suite (~1,200 sq ft) available. Ground floor is fully leased. Elevator access and shared restrooms."
+    },
+    {
+      id: 5, name: "215 E Rose St",
+      lat: 46.0702553, lng: -118.3377191,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-building-02.jpg",
+      photoAlt: "Street-facing commercial market building in Walla Walla",
+      status: "Vacant", sqft: 1100, rent: 900, type: "Retail",
+      contact: "Main Street Realty", phone: "(509) 555-0177", email: "main@example.com",
+      notes: "Cozy, move-in ready storefront with great natural light. Ideal for a cafe, studio, or specialty shop."
+    },
+    {
+      id: 6, name: "301 W Alder St",
+      lat: 46.0641760, lng: -118.3426560,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-building-01.jpg",
+      photoAlt: "Commercial building and parking area in Walla Walla",
+      status: "Occupied", sqft: 2600, rent: null, type: "Retail",
+      contact: null, phone: null, email: null,
+      notes: "Currently operating as an art gallery."
+    },
+    {
+      id: 7, name: "140 S 2nd Ave",
+      lat: 46.0654486, lng: -118.3384625,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-industrial-building-01.jpg",
+      photoAlt: "Commercial loading building exterior in Walla Walla",
+      status: "Vacant", sqft: 4500, rent: 3200, type: "Mixed-use",
+      contact: "Downtown Dev Group", phone: "(509) 555-0165", email: "ddg@example.com",
+      notes: "Large open floor plan with a loading dock. Suitable for a brewery, light industrial, or large-format retail. Mixed-use zoning."
+    },
+    {
+      id: 8, name: "88 E Alder St",
+      lat: 46.0662020, lng: -118.3375632,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-01.jpg",
+      photoAlt: "Downtown Walla Walla storefront along Main Street",
+      status: "Partial", sqft: 3800, rent: 1100, type: "Office",
+      contact: "Pacific NW Real Estate", phone: "(509) 555-0133", email: "pnw@example.com",
+      notes: "Suite 200 (~900 sq ft) available on the 2nd floor. Remaining suites are leased. Includes fiber internet and a shared kitchenette."
+    },
+    {
+      id: 9, name: "320 W Main St",
+      lat: 46.0650925, lng: -118.3436789,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
+      photoAlt: "Historic downtown Walla Walla storefront facade",
+      status: "Occupied", sqft: 2100, rent: null, type: "Retail",
+      contact: null, phone: null, email: null,
+      notes: "Boutique clothing store."
+    },
+    {
+      id: 10, name: "175 N 1st Ave",
+      lat: 46.0661631, lng: -118.3372007,
+      location: { precision: "approximate", source: "Nearest matching OSM 1st Ave segment" },
+      photo: "assets/images/walla-walla-retail-corridor-01.jpg",
+      photoAlt: "Commercial building along a Walla Walla retail corridor",
+      status: "Vacant", sqft: 1600, rent: 1200, type: "Retail",
+      contact: "Valley Properties", phone: "(509) 555-0188", email: "valley@example.com",
+      notes: "One block from the farmers market. High weekend foot traffic. Flexible lease terms available on request."
+    },
+    {
+      id: 11, name: "250 E Birch St",
+      lat: 46.0657391, lng: -118.3329325,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-building-02.jpg",
+      photoAlt: "Street-facing commercial market building in Walla Walla",
+      status: "Occupied", sqft: 3000, rent: null, type: "Mixed-use",
+      contact: null, phone: null, email: null,
+      notes: "Winery tasting room."
+    },
+    {
+      id: 12, name: "66 S Colville St",
+      lat: 46.0671859, lng: -118.3363073,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-interior-01.jpg",
+      photoAlt: "Commercial interior space suitable for a Walla Walla business",
+      status: "Partial", sqft: 6000, rent: 2800, type: "Office",
+      contact: "WW Commercial Realty", phone: "(509) 555-0198", email: "info@wwcommercial.com",
+      notes: "Upper floors (~2,400 sq ft) available. Ground floor fully leased. Dedicated parking lot. Recently renovated HVAC system."
+    },
+    {
+      id: 13, name: "400 E Main St",
+      lat: 46.0705170, lng: -118.3343800,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-01.jpg",
+      photoAlt: "Downtown Walla Walla storefront along Main Street",
+      status: "Vacant", sqft: 800, rent: 700, type: "Retail",
+      contact: "Eastside Holdings", phone: "(509) 555-0122", email: "east@example.com",
+      notes: "Small, well-located space — great for a pop-up, studio, or micro-retail concept. Recently repainted interior."
+    },
+    {
+      id: 14, name: "55 W Rose St",
+      lat: 46.0652263, lng: -118.3459125,
+      location: { precision: "approximate", source: "Nearest matching OSM W Rose St segment" },
+      photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
+      photoAlt: "Historic downtown Walla Walla streetscape and storefronts",
+      status: "Vacant", sqft: 2800, rent: 2000, type: "Mixed-use",
+      contact: "Cascade Properties", phone: "(509) 555-0142", email: "cascade@example.com",
+      notes: "Former restaurant space with grease trap and commercial kitchen infrastructure in place. High potential for a food and beverage concept."
+    },
+  ];
+
+
+  // ==============================================================
+  // COLOR MAP
+  // Maps vacancy status → hex color used for map markers and badges.
+  // Keeping this in one place makes it easy to update the palette.
+  // ==============================================================
+  const COLOR = {
+    Vacant:   "#2f7d4f",  // green
+    Partial:  "#d99a22",  // amber
+    Occupied: "#b94a3a",  // red
+  };
+
+
+  // ==============================================================
+  // STATE
+  // filtered       → subset of buildings currently visible (after filters)
+  // leafletMarkers → maps building id → Leaflet marker object
+  //                  so we can remove/re-add markers on filter change
+  // map            → the Leaflet map instance
+  // selectedId     → id of whichever building is currently selected
+  // ==============================================================
+  let filtered       = [...buildings];
+  let leafletMarkers = {};
+  let map;
+  let selectedId     = null;
+  let sidebarCollapsed = false;
+
+
+  // ==============================================================
+  // UTILITY FUNCTIONS
+  // ==============================================================
+
+  /** Format a rent number as "$1,800/mo", or "—" if null */
+  function formatRent(n) {
+    return n ? ("$" + n.toLocaleString() + "/mo") : "—";
+  }
+
+  /** Format a square footage number as "2,400 sq ft" */
+  function formatSqft(n) {
+    return n.toLocaleString() + " sq ft";
+  }
+
+  /** Format KPI numbers with thousands separators */
+  function formatNumber(n) {
+    return n.toLocaleString();
+  }
+
+  /** Return the CSS class for a status badge based on vacancy status */
+  function getBadgeClass(status) {
+    if (status === "Vacant")   return "badge-vacant";
+    if (status === "Occupied") return "badge-occupied";
+    return "badge-partial";
+  }
+
+  /** Text searched by the sidebar search box */
+  function getSearchText(b) {
+    return [
+      b.name,
+      b.status,
+      b.type,
+      b.notes,
+      b.contact,
+      b.location && b.location.source,
+    ].filter(Boolean).join(" ").toLowerCase();
+  }
+
+  /** Human-readable marker confidence shown next to each address */
+  function getLocationLabel(b) {
+    if (!b.location || b.location.precision !== "approximate") {
+      return "Verified marker";
+    }
+    return "Approximate marker";
+  }
+
+  /** CSS class for the marker confidence pill */
+  function getLocationClass(b) {
+    return b.location && b.location.precision === "approximate"
+      ? "location-note is-approx"
+      : "location-note";
+  }
+
+  /** Keep the map framed around whichever markers are currently visible */
+  function fitMapToVisibleBuildings(items) {
+    if (!items.length) return;
+
+    const bounds = L.latLngBounds(items.map(b => [b.lat, b.lng]));
+    map.fitBounds(bounds.pad(0.18), {
+      maxZoom: 17,
+      animate: true,
+      duration: 0.35,
+    });
+  }
+
+  /** Surface obvious data problems during development */
+  function validateBuildingData(items) {
+    const ids = new Set();
+
+    items.forEach(b => {
+      if (ids.has(b.id)) {
+        console.warn(`Duplicate building id: ${b.id}`);
+      }
+      ids.add(b.id);
+
+      if (!Number.isFinite(b.lat) || !Number.isFinite(b.lng)) {
+        console.warn(`Missing coordinates for ${b.name}`);
+      }
+
+      if (!b.location || !b.location.precision) {
+        console.warn(`Missing location confidence for ${b.name}`);
+      }
+
+      if (!b.photo) {
+        console.warn(`Missing prototype photo path for ${b.name}`);
+      }
+
+      if (!b.photoAlt) {
+        console.warn(`Missing prototype photo alt text for ${b.name}`);
+      }
+    });
+  }
+
+  /** Hide or restore the listing/detail panel and resize the map */
+  function setSidebarCollapsed(collapsed) {
+    sidebarCollapsed = collapsed;
+    document.getElementById("app").classList.toggle("sidebar-collapsed", collapsed);
+
+    const toggle = document.getElementById("panel-toggle");
+    toggle.textContent = collapsed ? "Show listings" : "Hide listings";
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+
+    if (map) {
+      setTimeout(() => map.invalidateSize(), 160);
+    }
+  }
+
+  /** Restore the sidebar when a command needs to show listing details */
+  function ensureSidebarOpen() {
+    if (sidebarCollapsed) {
+      setSidebarCollapsed(false);
+    }
+  }
+
+
+  // ==============================================================
+  // MAP MARKER ICON
+  // Creates a custom circular Leaflet divIcon.
+  // The 'active' flag makes the selected marker bigger and bolder
+  // to visually confirm which building is focused.
+  // ==============================================================
+  function makeIcon(status, active) {
+    const color = COLOR[status] || "#888";
+    const size  = active ? 18 : 13;
+    const border = active ? 3 : 2;
+
+    return L.divIcon({
+      html: `<div style="
+        width: ${size}px;
+        height: ${size}px;
+        border-radius: 50%;
+        background: ${color};
+        border: ${border}px solid white;
+        box-shadow: 0 1px 3px rgba(23,49,59,0.28);
+        transition: all 0.15s ease;
+      "></div>`,
+      className:   "",
+      iconSize:    [size, size],
+      iconAnchor:  [size / 2, size / 2],
+      popupAnchor: [0, -10],
+    });
+  }
+
+
+  // ==============================================================
+  // POPUP HTML
+  // The small tooltip that appears directly on the map when a
+  // marker is clicked. Kept intentionally brief — full details
+  // are shown in the sidebar detail panel.
+  // ==============================================================
+  function buildPopupHTML(b) {
+    const badgeClass = getBadgeClass(b.status);
+    return `
+      <div class="popup-inner">
+        <div class="popup-addr">${b.name}</div>
+        <span class="badge ${badgeClass}">${b.status}</span>
+        <div class="popup-type">${b.type} &nbsp;·&nbsp; ${formatSqft(b.sqft)}</div>
+        <div class="popup-location">${getLocationLabel(b)}</div>
+        ${b.status !== "Occupied"
+          ? `<div class="popup-rent">${formatRent(b.rent)}</div>`
+          : ""
+        }
+        <button class="popup-hint" type="button" data-building-id="${b.id}">
+          Click to see full details →
+        </button>
+      </div>
+    `;
+  }
+
+
+  // ==============================================================
+  // RENDER SIDEBAR LIST
+  // Rebuilds the left-panel listing from the current `filtered`
+  // array. Showing every filtered sample listing makes status
+  // search and the occupied filter behave consistently.
+  // ==============================================================
+  function renderList() {
+    const listEl  = document.getElementById("listing");
+    const emptyEl = document.getElementById("empty");
+
+    listEl.innerHTML = "";
+
+    if (filtered.length === 0) {
+      emptyEl.style.display = "block";
+      listEl.style.display  = "none";
+    } else {
+      emptyEl.style.display = "none";
+      listEl.style.display  = "block";
+    }
+
+    filtered.forEach(b => {
+      const item = document.createElement("div");
+      item.className  = "list-item" + (selectedId === b.id ? " active" : "");
+      item.dataset.id = b.id;
+
+      item.innerHTML = `
+        <h3>${b.name}</h3>
+        <div class="meta">
+          <span class="badge ${getBadgeClass(b.status)}">${b.status}</span>
+          <span class="${getLocationClass(b)}">${getLocationLabel(b)}</span>
+        </div>
+        <div class="sub-detail">
+          <div class="listing-stat"><span>Type</span><strong>${b.type}</strong></div>
+          <div class="listing-stat"><span>Size</span><strong>${formatSqft(b.sqft)}</strong></div>
+          <div class="listing-stat"><span>Rent</span><strong>${formatRent(b.rent)}</strong></div>
+          <div class="listing-stat"><span>Status</span><strong>${b.status}</strong></div>
+        </div>
+        <span class="view-details">View details</span>
+      `;
+
+      // Clicking a list row selects the building (same as clicking the marker)
+      item.addEventListener("click", () => selectBuilding(b.id));
+      listEl.appendChild(item);
+    });
+
+    updateStatPills();
+  }
+
+
+  // ==============================================================
+  // UPDATE STAT PILLS
+  // Recounts and displays the number of vacant / partial / occupied
+  // spaces within the current filtered set.
+  // ==============================================================
+  function updateStatPills() {
+    const vacantCount = filtered.filter(b => b.status === "Vacant").length;
+    const partialCount = filtered.filter(b => b.status === "Partial").length;
+    const occupiedCount = filtered.filter(b => b.status === "Occupied").length;
+    const availableCount = vacantCount + partialCount;
+    const availableSqft = filtered
+      .filter(b => b.status === "Vacant" || b.status === "Partial")
+      .reduce((sum, b) => sum + b.sqft, 0);
+
+    document.getElementById("cnt-v").textContent = vacantCount;
+    document.getElementById("cnt-p").textContent = partialCount;
+    document.getElementById("cnt-o").textContent = occupiedCount;
+
+    document.getElementById("kpi-total").textContent = formatNumber(filtered.length);
+    document.getElementById("kpi-available").textContent = formatNumber(availableCount);
+    document.getElementById("kpi-occupied").textContent = formatNumber(occupiedCount);
+    document.getElementById("kpi-sqft").textContent = formatNumber(availableSqft);
+
+    const subtitle = document.getElementById("panel-subtitle");
+    if (subtitle) {
+      subtitle.textContent = `${filtered.length} sample ${filtered.length === 1 ? "listing" : "listings"} shown.`;
+    }
+  }
+
+
+  // ==============================================================
+  // APPLY FILTERS
+  // Called whenever any of the three filter dropdowns changes.
+  // Reads all three filter values together, rebuilds `filtered`,
+  // removes all existing map markers, and re-adds only the
+  // matching ones. Also resets the detail panel.
+  // ==============================================================
+  function applyFilters() {
+    const statusVal = document.getElementById("f-status").value;
+    const typeVal   = document.getElementById("f-type").value;
+    const rentMax   = parseInt(document.getElementById("f-rent").value) || 0;
+    const query     = document.getElementById("f-search").value.trim().toLowerCase();
+
+    filtered = buildings.filter(b => {
+      // Status filter
+      if (statusVal !== "all" && b.status !== statusVal) return false;
+
+      // Space type filter
+      if (typeVal !== "all" && b.type !== typeVal) return false;
+
+      // Max rent filter — skip occupied spaces entirely when a rent cap is set,
+      // and skip spaces whose rent exceeds the cap
+      if (rentMax > 0 && b.status === "Occupied") return false;
+      if (rentMax > 0 && b.rent && b.rent > rentMax) return false;
+
+      // Search filter — address, status, type, notes, contact, and marker source
+      if (query && !getSearchText(b).includes(query)) return false;
+
+      return true;
+    });
+
+    // Remove all current markers from the map
+    Object.values(leafletMarkers).forEach(m => map.removeLayer(m));
+    leafletMarkers = {};
+
+    // Re-add markers for the filtered set only
+    filtered.forEach(b => addMarkerToMap(b));
+
+    renderList();
+    closeDetailPanel(); // reset detail view since selection may no longer be visible
+    fitMapToVisibleBuildings(filtered);
+  }
+
+
+  // ==============================================================
+  // ADD MARKER TO MAP
+  // Creates a Leaflet marker for a building, binds a popup, and
+  // wires up the click handler. Stored in leafletMarkers[b.id]
+  // so we can reference it later (e.g. to change its icon or
+  // trigger a popup programmatically).
+  // ==============================================================
+  function addMarkerToMap(b) {
+    const marker = L.marker([b.lat, b.lng], { icon: makeIcon(b.status, false) })
+      .bindPopup(buildPopupHTML(b), { maxWidth: 230, minWidth: 200, closeButton: false })
+      .addTo(map);
+
+    // Clicking the marker selects the building and opens the detail panel
+    marker.on("click", () => selectBuilding(b.id));
+
+    leafletMarkers[b.id] = marker;
+  }
+
+
+  // ==============================================================
+  // SELECT BUILDING
+  // Central function called when the user clicks either a map
+  // marker OR a sidebar list item. It:
+  //   1. Updates the selected marker icon (larger + bolder)
+  //   2. Flies the map view smoothly to that building
+  //   3. Opens the map popup
+  //   4. Opens the sidebar detail panel
+  //   5. Highlights the active list row
+  // ==============================================================
+  function selectBuilding(id) {
+    selectedId = id;
+    const building = buildings.find(b => b.id === id);
+    if (!building) return;
+
+    ensureSidebarOpen();
+
+    // Update all marker icons: enlarge the selected one, reset others
+    Object.entries(leafletMarkers).forEach(([bid, marker]) => {
+      const b = buildings.find(b => b.id === parseInt(bid));
+      marker.setIcon(makeIcon(b.status, parseInt(bid) === id));
+    });
+
+    // Smoothly animate the map to center on the selected building
+    map.flyTo([building.lat, building.lng], 17, { duration: 0.8 });
+
+    // Open the Leaflet popup on that marker
+    if (leafletMarkers[id]) {
+      leafletMarkers[id].openPopup();
+    }
+
+    // Show the detail panel in the sidebar
+    openDetailPanel(building);
+
+    // Highlight the corresponding list item
+    document.querySelectorAll(".list-item").forEach(el => {
+      el.classList.toggle("active", parseInt(el.dataset.id) === id);
+    });
+  }
+
+
+  // ==============================================================
+  // OPEN DETAIL PANEL
+  // Populates and shows the building detail view in the sidebar,
+  // hiding the list. Contact info is only shown for non-occupied
+  // spaces — occupied buildings just show basic info and notes.
+  // ==============================================================
+  function openDetailPanel(b) {
+    document.getElementById("detail-panel").classList.add("open");
+    document.getElementById("listing-view").classList.add("hidden");
+    document.getElementById("panel-header").innerHTML = `
+      <strong>Space details</strong>
+      <span>${b.name}</span>
+    `;
+
+    const hasContact = Boolean(b.contact);
+    const hasEmail = Boolean(b.email && b.status !== "Occupied");
+
+    document.getElementById("detail-content").innerHTML = `
+      <div class="detail-photo-wrap">
+        <img
+          class="detail-photo"
+          src="${b.photo}"
+          alt="${b.photoAlt}"
+          onerror="this.closest('.detail-photo-wrap').classList.add('image-missing');"
+        />
+        <div class="detail-photo-caption">
+          Reference image for prototype demonstration. May not depict the exact property.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+        <span class="badge ${getBadgeClass(b.status)}" style="font-size:12px; padding:3px 10px;">
+          ${b.status}
+        </span>
+      </div>
+
+      <div class="detail-address">${b.name}</div>
+      <div class="${getLocationClass(b)}">${getLocationLabel(b)} · ${b.location.source}</div>
+
+      <!-- Space specs -->
+      <div class="detail-section">
+        <h4>Space overview</h4>
+        <div class="detail-row"><span>Type</span><span>${b.type}</span></div>
+        <div class="detail-row"><span>Status</span><span>${b.status}</span></div>
+        <div class="detail-row"><span>Marker confidence</span><span>${getLocationLabel(b)}</span></div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Rent and size</h4>
+        <div class="detail-row"><span>Total size</span><span>${formatSqft(b.sqft)}</span></div>
+        ${b.status !== "Occupied"
+          ? `<div class="detail-row"><span>Asking rent</span><span>${formatRent(b.rent)}</span></div>`
+          : ""
+        }
+      </div>
+
+      <!-- Contact info -->
+      <div class="detail-section">
+        <h4>Contact</h4>
+        ${hasContact ? `
+          <div class="detail-row"><span>Property mgr</span><span>${b.contact}</span></div>
+          <div class="detail-row"><span>Phone</span><span>${b.phone || "Not listed"}</span></div>
+          <div class="detail-row"><span>Email</span><span style="font-size:11px;">${b.email || "Not listed"}</span></div>
+        ` : `<div class="notes-box">No contact information is listed for this sample occupied space.</div>`}
+        ${hasEmail ? `<a class="contact-button" href="mailto:${b.email}?subject=${encodeURIComponent("Downtown Walla Walla listing inquiry: " + b.name)}">Contact property manager</a>` : ""}
+      </div>
+
+      <!-- Notes / description -->
+      <div class="detail-section">
+        <h4>Notes</h4>
+        <div class="notes-box">${b.notes}</div>
+      </div>
+    `;
+  }
+
+
+  // ==============================================================
+  // CLOSE DETAIL PANEL
+  // Resets the sidebar back to the default list view, clears the
+  // selected building, and resets all marker icons to their
+  // default (smaller) size.
+  // ==============================================================
+  function closeDetailPanel() {
+    document.getElementById("detail-panel").classList.remove("open");
+    document.getElementById("listing-view").classList.remove("hidden");
+    document.getElementById("panel-header").innerHTML = `
+      <strong>Listings</strong>
+      <span id="panel-subtitle">Browse sample listings and select a marker for details.</span>
+    `;
+
+    selectedId = null;
+
+    // Reset all marker icons back to default size
+    Object.entries(leafletMarkers).forEach(([bid, marker]) => {
+      const b = buildings.find(b => b.id === parseInt(bid));
+      marker.setIcon(makeIcon(b.status, false));
+    });
+
+    updateStatPills();
+  }
+
+
+  // ==============================================================
+  // EVENT LISTENERS
+  // ==============================================================
+
+  // Back button in detail panel → return to listing view
+  document.getElementById("detail-back").addEventListener("click", closeDetailPanel);
+
+  document.getElementById("panel-toggle").addEventListener("click", () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  });
+
+  document.addEventListener("click", event => {
+    const detailButton = event.target.closest(".popup-hint");
+    if (!detailButton) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    selectBuilding(parseInt(detailButton.dataset.buildingId));
+  });
+
+  // Any filter dropdown change → re-run all filters
+  ["f-status", "f-type", "f-rent"].forEach(id => {
+    document.getElementById(id).addEventListener("change", applyFilters);
+  });
+
+  document.getElementById("f-search").addEventListener("input", applyFilters);
+
+
+  // ==============================================================
+  // MAP INITIALIZATION
+  // Runs after the page fully loads (to ensure the #map div exists
+  // and has a rendered size — Leaflet needs this).
+  //
+  // Steps:
+  //   1. Create the Leaflet map centered on downtown Walla Walla
+  //   2. Add OpenStreetMap tile layer (free, no API key needed)
+  //   3. Place all building markers
+  //   4. Render the initial sidebar list
+  // ==============================================================
+  window.addEventListener("load", function () {
+    validateBuildingData(buildings);
+
+    // Initialize map centered on downtown Walla Walla, WA
+    // Zoom level 16 shows roughly a 4–5 block radius
+    map = L.map("map", { zoomControl: true }).setView([46.0674, -118.3389], 16);
+
+    // OpenStreetMap tile layer — free and open source
+    // Attribution is required by the OSM tile usage policy
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Floating map legend explaining the status color system
+    const legend = L.control({ position: "bottomleft" });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create("div", "map-legend");
+      div.innerHTML = `
+        <strong>Map legend</strong>
+        <div class="legend-item"><span class="legend-dot" style="background:${COLOR.Vacant};"></span>Green = Vacant</div>
+        <div class="legend-item"><span class="legend-dot" style="background:${COLOR.Partial};"></span>Amber = Partial vacancy</div>
+        <div class="legend-item"><span class="legend-dot" style="background:${COLOR.Occupied};"></span>Red = Occupied</div>
+      `;
+      return div;
+    };
+    legend.addTo(map);
+
+    // Place a marker for every building in the dataset
+    buildings.forEach(b => addMarkerToMap(b));
+
+    // Render the initial listing in the sidebar
+    renderList();
+
+    // Frame the real marker spread instead of relying on a stale manual center.
+    fitMapToVisibleBuildings(buildings);
+  });
+

@@ -1,0 +1,793 @@
+  /* =============================================================
+     BASE RESET & LAYOUT
+     We use a flex column layout so the header stays above the
+     map+panel area and the workspace fills the viewport.
+  ============================================================= */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  :root {
+    --cream: #f4f1ea;
+    --cream-soft: #faf8f3;
+    --panel: #fdfcf8;
+    --panel-strong: #ffffff;
+    --ink: #1f2f38;
+    --muted: #69736f;
+    --line: #d8d2c6;
+    --navy: #1d3542;
+    --green: #2f7d4f;
+    --green-soft: #e6f1e8;
+    --amber: #c7891c;
+    --amber-soft: #f8edcf;
+    --red: #b94a3a;
+    --red-soft: #f4dfda;
+    --accent: #5d6f78;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  /* Main app wrapper: column flex so topbar + main stack vertically */
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 600px;
+    background: var(--cream);
+  }
+
+  /* =============================================================
+     TOP BAR: title, filters, and live vacancy stats
+  ============================================================= */
+  #topbar {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #fdfcf8;
+    border-bottom: 1px solid #c9c2b6;
+    gap: 14px;
+    flex-wrap: wrap;
+    z-index: 1000; /* sit above the map */
+  }
+
+  .title-block {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  #topbar h1 {
+    font-size: 19px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0;
+  }
+
+  #topbar .subtitle {
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+
+  .title-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .data-pill {
+    width: fit-content;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4e5b5f;
+    background: #f1eee6;
+    border: 1px solid #d7d0c4;
+    border-radius: 3px;
+    padding: 4px 7px;
+  }
+
+  /* =============================================================
+     FILTER CONTROLS
+     Three dropdowns: status, type, max rent.
+     All filters are applied together on any change.
+  ============================================================= */
+  .filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    background: #f5f2eb;
+    border: 1px solid #d7d0c4;
+    border-radius: 4px;
+    padding: 8px;
+    max-width: 720px;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .filter-group label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #56646a;
+  }
+
+  .filter-group select {
+    font-size: 13px;
+    padding: 6px 9px;
+    border-radius: 3px;
+    border: 1px solid #c7c0b4;
+    background: #ffffff;
+    color: var(--ink);
+    height: 32px;
+    cursor: pointer;
+    min-width: 130px;
+  }
+
+  .filter-group select:hover {
+    border-color: #c8b895;
+  }
+
+  /* =============================================================
+     STAT PILLS
+     Show live counts of vacant / partial / occupied spaces,
+     updating whenever filters change.
+  ============================================================= */
+  #stats {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .panel-toggle {
+    align-self: center;
+    height: 32px;
+    border: 1px solid #b8b1a5;
+    border-radius: 3px;
+    background: #ffffff;
+    color: var(--navy);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 10px;
+  }
+
+  .panel-toggle:hover {
+    background: #f5f2eb;
+    border-color: #8f877a;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-weight: 650;
+    border: 1px solid transparent;
+  }
+
+  /* Color-coded by status — same palette as the map markers */
+  .stat-vacant   { background: var(--green-soft); color: #1f613b; border-color: rgba(47, 125, 79, 0.22); }
+  .stat-partial  { background: var(--amber-soft); color: #805000; border-color: rgba(217, 154, 34, 0.25); }
+  .stat-occupied { background: var(--red-soft); color: #8f3025; border-color: rgba(185, 74, 58, 0.22); }
+
+  .stat .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* =============================================================
+     KPI STRIP
+     Compact civic-style metrics that update with filters/search.
+  ============================================================= */
+  #kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    padding: 0 10px;
+    background: #cfc8bc;
+    border-bottom: 1px solid #c7c0b4;
+  }
+
+  .kpi-card {
+    background: #fdfcf8;
+    padding: 9px 11px;
+    min-width: 0;
+  }
+
+  .kpi-card span {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .kpi-card strong {
+    display: block;
+    font-size: 18px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* =============================================================
+     MAIN CONTENT AREA
+     Left side: Leaflet map (flex: 1, fills remaining space)
+     Right side: sidebar panel with listing cards and details
+  ============================================================= */
+  #main {
+    display: flex;
+    flex: 1;
+    gap: 10px;
+    padding: 10px;
+    min-height: 0;
+    overflow: hidden; /* prevents the map from causing page scroll */
+  }
+
+  /* The Leaflet map fills all remaining horizontal space */
+  #map {
+    flex: 1;
+    height: 100%;
+    min-height: 420px;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: none;
+    border: 1px solid #bfb8ac;
+  }
+
+  /* =============================================================
+     SIDEBAR PANEL
+     Shows either:
+       (a) a scrollable list of available spaces, or
+       (b) a detail view for a selected building
+     These two states are toggled via CSS classes.
+  ============================================================= */
+  #panel {
+    width: 365px;
+    background: var(--panel);
+    border: 1px solid #c7c0b4;
+    border-radius: 2px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #app.sidebar-collapsed #panel {
+    display: none;
+  }
+
+  #app.sidebar-collapsed #map {
+    min-width: 0;
+  }
+
+  #panel-header {
+    padding: 11px 13px;
+    border-bottom: 1px solid #cfc8bc;
+    background: #ebe7dd;
+  }
+
+  #panel-header strong {
+    display: block;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  #panel-header span {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.35;
+  }
+
+  #listing-view {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+  }
+
+  #listing-view.hidden { display: none; }
+
+  .listing-tools {
+    padding: 10px 12px;
+    border-bottom: 1px solid #d8d2c6;
+    background: #f8f6f0;
+  }
+
+  .search-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  #f-search {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #c7c0b4;
+    border-radius: 3px;
+    background: #ffffff;
+    color: var(--ink);
+    font-size: 13px;
+    padding: 0 9px;
+    outline: none;
+  }
+
+  #f-search:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(47, 125, 79, 0.12);
+  }
+
+  /* --- Listing view (default state) --- */
+  #listing {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f4f1ea;
+  }
+
+  /* Each building row in the sidebar list */
+  .list-item {
+    padding: 10px;
+    border: 1px solid #d3ccbf;
+    border-radius: 2px;
+    background: var(--panel-strong);
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+    box-shadow: none;
+    margin-bottom: 8px;
+  }
+
+  .list-item:hover {
+    border-color: #9e9485;
+    background: #fbfaf6;
+  }
+
+  .list-item.active  {
+    border-color: var(--green);
+    box-shadow: inset 3px 0 0 var(--green);
+  }
+
+  .list-item h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 7px;
+  }
+
+  .list-item .meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .list-item .sub-detail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    border: 1px solid #e3ddd3;
+    background: #e3ddd3;
+  }
+
+  .listing-stat {
+    background: #fbfaf6;
+    border-radius: 0;
+    padding: 7px;
+  }
+
+  .listing-stat span {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8a7b68;
+    margin-bottom: 2px;
+    font-weight: 700;
+  }
+
+  .listing-stat strong {
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  .view-details {
+    display: inline-block;
+    margin-top: 9px;
+    color: #2c5b70;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .location-note {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #4b6656;
+    background: #ecf3ee;
+    border: 1px solid #cadbcf;
+    border-radius: 3px;
+    padding: 3px 6px;
+    margin-top: 0;
+  }
+
+  .location-note.is-approx {
+    background: var(--amber-soft);
+    color: #805000;
+  }
+
+  .prototype-note {
+    margin: 0;
+    padding: 11px 12px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--muted);
+    background: #efebe2;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Empty state when filters return zero results */
+  #empty {
+    display: none;
+    margin: 10px;
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    background: #fbfaf6;
+    border: 1px dashed #d8c8aa;
+    border-radius: 2px;
+  }
+
+  #empty strong {
+    display: block;
+    color: var(--ink);
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  /* --- Status badge pill used in list and detail views --- */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+  }
+
+  .badge-vacant   { background: var(--green-soft); color: #1f613b; border-color: #c6ddca; }
+  .badge-occupied { background: var(--red-soft); color: #8f3025; border-color: #e5c7bf; }
+  .badge-partial  { background: var(--amber-soft); color: #805000; border-color: #e4d49b; }
+
+  /* --- Detail view (shown when a building is selected) --- */
+  #detail-panel {
+    display: none; /* hidden by default; shown via .open class */
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  #detail-panel.open {
+    display: flex;
+  }
+
+  /* When detail is open, hide the listing view */
+  #listing.hidden { display: none; }
+
+  /* Back button at top of detail view */
+  #detail-back {
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--ink);
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #efebe2;
+    font-weight: 700;
+  }
+
+  #detail-back:hover { background: #e6e0d5; }
+
+  #detail-content {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    background: #f4f1ea;
+  }
+
+  .detail-photo-wrap {
+    background: #ffffff;
+    border: 1px solid #d3ccbf;
+    margin-bottom: 10px;
+  }
+
+  .detail-photo {
+    display: block;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid #d3ccbf;
+    background: #ebe7dd;
+  }
+
+  .detail-photo-caption {
+    padding: 7px 9px;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--muted);
+    background: #f8f6f0;
+  }
+
+  .detail-photo-wrap.image-missing .detail-photo {
+    display: none;
+  }
+
+  .detail-photo-wrap.image-missing::before {
+    content: "Reference image unavailable";
+    display: block;
+    padding: 28px 12px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--muted);
+    background: #ebe7dd;
+    border-bottom: 1px solid #d3ccbf;
+  }
+
+  .detail-address {
+    font-size: 20px;
+    line-height: 1.18;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 9px 0 8px;
+  }
+
+  /* Section headers inside the detail card */
+  .detail-section {
+    margin-top: 10px;
+    background: var(--panel-strong);
+    border: 1px solid #d3ccbf;
+    border-radius: 2px;
+    padding: 10px;
+    box-shadow: none;
+  }
+
+  .detail-section h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  /* Key-value row inside detail sections */
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid #f1e7d8;
+  }
+
+  .detail-row:last-child { border-bottom: 0; }
+  .detail-row span:first-child { color: var(--muted); }
+  .detail-row span:last-child  { font-weight: 700; color: var(--ink); text-align: right; }
+
+  /* Notes / description block */
+  .notes-box {
+    background: #f8f6f0;
+    border: 1px solid #e2dbce;
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 13px;
+    color: #53625b;
+    margin-top: 8px;
+    line-height: 1.65;
+  }
+
+  .contact-button {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    padding: 9px 11px;
+    border-radius: 3px;
+    background: var(--green);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: none;
+  }
+
+  .contact-button:hover { background: #256641; }
+
+  /* =============================================================
+     LEAFLET POPUP OVERRIDES
+     Custom styling for the map popup that appears when clicking a
+     marker. Leaflet's default styles are overridden here.
+  ============================================================= */
+  .leaflet-popup-content-wrapper {
+    border-radius: 2px !important;
+    box-shadow: 0 2px 8px rgba(31, 47, 56, 0.16) !important;
+    padding: 0 !important;
+    border: 1px solid rgba(90, 72, 44, 0.14);
+  }
+
+  .leaflet-popup-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-width: 190px;
+  }
+
+  .popup-inner    { padding: 11px 12px; background: #fffdf8; }
+  .popup-addr     { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .popup-type     { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .popup-rent     { font-size: 14px; font-weight: 700; color: var(--green); margin-top: 8px; }
+  .popup-location { font-size: 10px; color: var(--muted); margin-top: 7px; }
+  .popup-hint {
+    display: inline-block;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    font-size: 10px;
+    color: #2c5b70;
+    margin-top: 7px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .popup-hint:hover { color: var(--navy); }
+
+  .map-legend {
+    background: rgba(253, 252, 248, 0.96);
+    border: 1px solid #bfb8ac;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(31, 47, 56, 0.12);
+    padding: 9px 10px;
+    color: var(--ink);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .map-legend strong {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+    color: var(--navy);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 5px;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    box-shadow: none;
+    border: 1px solid rgba(31, 47, 56, 0.22);
+  }
+
+  @media (max-width: 900px) {
+    #app {
+      height: auto;
+      min-height: 100vh;
+    }
+
+    #topbar {
+      padding: 16px;
+    }
+
+    .filters {
+      width: 100%;
+    }
+
+    .filter-group {
+      flex: 1 1 150px;
+    }
+
+    .filter-group select {
+      width: 100%;
+    }
+
+    #main {
+      flex-direction: column;
+      overflow: visible;
+      padding: 14px;
+    }
+
+    #map {
+      flex: none;
+      height: 58vh;
+      min-height: 360px;
+    }
+
+    #panel {
+      width: 100%;
+      min-height: 420px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #topbar h1 {
+      font-size: 20px;
+    }
+
+    #topbar .subtitle {
+      font-size: 13px;
+    }
+
+    #stats {
+      width: 100%;
+    }
+
+    .panel-toggle {
+      width: 100%;
+    }
+
+    #kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat {
+      flex: 1 1 30%;
+      justify-content: center;
+    }
+
+    #map {
+      height: 52vh;
+      border-radius: 2px;
+    }
+
+    .kpi-card strong {
+      font-size: 16px;
+    }
+  }
