@@ -29,8 +29,10 @@
     1. Building data is hardcoded — needs a real DB or CMS backend
     2. No admin interface for the Foundation to update listings
     3. No authentication — everything is public read-only for now
-    4. Marker positions are approximate (manually set lat/lng)
-       — real version should geocode from actual street addresses
+    4. Map marker positions are based on OSM geocoding, not a verified
+       commercial property dataset — all locations should be verified
+       before going live, and ideally there would be a way for staff to
+       manually adjust marker positions if needed.
 
     Next steps (for full project scope):
     -------------------------------------
@@ -39,6 +41,7 @@
     - Embed as an iframe on downtownww.com
     - Add photo uploads per listing
     - Add sq ft range slider filter
+    - Replace sample contact/listing data with a live verified inventory
 
     Last updated: June 2026
     ============================================================
@@ -257,6 +260,21 @@
       margin-top: 4px;
     }
 
+    .location-note {
+      display: inline-block;
+      font-size: 10px;
+      color: #777;
+      background: #f2f2f2;
+      border-radius: 999px;
+      padding: 2px 7px;
+      margin-top: 6px;
+    }
+
+    .location-note.is-approx {
+      background: #fff6df;
+      color: #7a4a00;
+    }
+
     /* Empty state when filters return zero results */
     #empty {
       display: none;
@@ -378,6 +396,7 @@
     .popup-addr     { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 5px; }
     .popup-type     { font-size: 11px; color: #777; margin-top: 4px; }
     .popup-rent     { font-size: 13px; font-weight: 700; color: #1a56db; margin-top: 6px; }
+    .popup-location { font-size: 10px; color: #777; margin-top: 6px; }
     .popup-hint     { font-size: 10px; color: #aaa; margin-top: 6px; font-style: italic; }
   </style>
 </head>
@@ -394,7 +413,7 @@
     <!-- App title and project context -->
     <div>
       <h1>Downtown Walla Walla — Vacancy Map</h1>
-      <div class="subtitle">Downtown Walla Walla Foundation &nbsp;·&nbsp; Prototype / Sample Data</div>
+      <div class="subtitle">Downtown Walla Walla Foundation &nbsp;·&nbsp; Prototype / Sample Data &nbsp;·&nbsp; Marker positions checked against OpenStreetMap</div>
     </div>
 
     <!-- Filter controls — all three are read together in applyFilters() -->
@@ -498,6 +517,7 @@
   //   id       — unique identifier (used as object key in leafletMarkers)
   //   name     — street address (displayed as the title)
   //   lat/lng  — GPS coordinates for the map marker
+  //   location — source and confidence for the marker position
   //   status   — "Vacant" | "Partial" | "Occupied"
   //   sqft     — total building square footage
   //   rent     — asking monthly rent in USD (null if occupied/unknown)
@@ -514,98 +534,112 @@
   const buildings = [
     {
       id: 1, name: "112 E Main St",
-      lat: 46.0655, lng: -118.3390,
+      lat: 46.0681018, lng: -118.3370044,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Vacant", sqft: 2400, rent: 1800, type: "Retail",
       contact: "John Smith Properties", phone: "(509) 555-0101", email: "jsmith@example.com",
       notes: "Corner unit with excellent foot traffic. Updated electrical, 14ft ceilings. Well-suited for a restaurant or boutique retail concept."
     },
     {
       id: 2, name: "124 E Main St",
-      lat: 46.0655, lng: -118.3378,
+      lat: 46.0684191, lng: -118.3364613,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Occupied", sqft: 1800, rent: null, type: "Retail",
       contact: null, phone: null, email: null,
       notes: "Currently operating as a restaurant."
     },
     {
       id: 3, name: "203 W Main St",
-      lat: 46.0655, lng: -118.3415,
+      lat: 46.0655388, lng: -118.3420822,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Vacant", sqft: 3200, rent: 2200, type: "Mixed-use",
       contact: "WW Commercial Realty", phone: "(509) 555-0198", email: "info@wwcommercial.com",
       notes: "Ground floor retail with upper floor office space. Exposed brick interior. Rear alley loading access."
     },
     {
       id: 4, name: "118 N Colville St",
-      lat: 46.0663, lng: -118.3395,
+      lat: 46.0687870, lng: -118.3386266,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Partial", sqft: 5000, rent: 1500, type: "Office",
       contact: "Cascade Properties", phone: "(509) 555-0142", email: "cascade@example.com",
       notes: "2nd floor suite (~1,200 sq ft) available. Ground floor is fully leased. Elevator access and shared restrooms."
     },
     {
       id: 5, name: "215 E Rose St",
-      lat: 46.0647, lng: -118.3375,
+      lat: 46.0702553, lng: -118.3377191,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Vacant", sqft: 1100, rent: 900, type: "Retail",
       contact: "Main Street Realty", phone: "(509) 555-0177", email: "main@example.com",
       notes: "Cozy, move-in ready storefront with great natural light. Ideal for a cafe, studio, or specialty shop."
     },
     {
       id: 6, name: "301 W Alder St",
-      lat: 46.0670, lng: -118.3420,
+      lat: 46.0641760, lng: -118.3426560,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Occupied", sqft: 2600, rent: null, type: "Retail",
       contact: null, phone: null, email: null,
       notes: "Currently operating as an art gallery."
     },
     {
       id: 7, name: "140 S 2nd Ave",
-      lat: 46.0640, lng: -118.3400,
+      lat: 46.0654486, lng: -118.3384625,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Vacant", sqft: 4500, rent: 3200, type: "Mixed-use",
       contact: "Downtown Dev Group", phone: "(509) 555-0165", email: "ddg@example.com",
       notes: "Large open floor plan with a loading dock. Suitable for a brewery, light industrial, or large-format retail. Mixed-use zoning."
     },
     {
       id: 8, name: "88 E Alder St",
-      lat: 46.0670, lng: -118.3385,
+      lat: 46.0662020, lng: -118.3375632,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Partial", sqft: 3800, rent: 1100, type: "Office",
       contact: "Pacific NW Real Estate", phone: "(509) 555-0133", email: "pnw@example.com",
       notes: "Suite 200 (~900 sq ft) available on the 2nd floor. Remaining suites are leased. Includes fiber internet and a shared kitchenette."
     },
     {
       id: 9, name: "320 W Main St",
-      lat: 46.0655, lng: -118.3430,
+      lat: 46.0650925, lng: -118.3436789,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Occupied", sqft: 2100, rent: null, type: "Retail",
       contact: null, phone: null, email: null,
       notes: "Boutique clothing store."
     },
     {
       id: 10, name: "175 N 1st Ave",
-      lat: 46.0662, lng: -118.3408,
+      lat: 46.0661631, lng: -118.3372007,
+      location: { precision: "approximate", source: "Nearest matching OSM 1st Ave segment" },
       status: "Vacant", sqft: 1600, rent: 1200, type: "Retail",
       contact: "Valley Properties", phone: "(509) 555-0188", email: "valley@example.com",
       notes: "One block from the farmers market. High weekend foot traffic. Flexible lease terms available on request."
     },
     {
       id: 11, name: "250 E Birch St",
-      lat: 46.0645, lng: -118.3370,
+      lat: 46.0657391, lng: -118.3329325,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Occupied", sqft: 3000, rent: null, type: "Mixed-use",
       contact: null, phone: null, email: null,
       notes: "Winery tasting room."
     },
     {
       id: 12, name: "66 S Colville St",
-      lat: 46.0640, lng: -118.3390,
+      lat: 46.0671859, lng: -118.3363073,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Partial", sqft: 6000, rent: 2800, type: "Office",
       contact: "WW Commercial Realty", phone: "(509) 555-0198", email: "info@wwcommercial.com",
       notes: "Upper floors (~2,400 sq ft) available. Ground floor fully leased. Dedicated parking lot. Recently renovated HVAC system."
     },
     {
       id: 13, name: "400 E Main St",
-      lat: 46.0655, lng: -118.3360,
+      lat: 46.0705170, lng: -118.3343800,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       status: "Vacant", sqft: 800, rent: 700, type: "Retail",
       contact: "Eastside Holdings", phone: "(509) 555-0122", email: "east@example.com",
       notes: "Small, well-located space — great for a pop-up, studio, or micro-retail concept. Recently repainted interior."
     },
     {
       id: 14, name: "55 W Rose St",
-      lat: 46.0647, lng: -118.3418,
+      lat: 46.0652263, lng: -118.3459125,
+      location: { precision: "approximate", source: "Nearest matching OSM W Rose St segment" },
       status: "Vacant", sqft: 2800, rent: 2000, type: "Mixed-use",
       contact: "Cascade Properties", phone: "(509) 555-0142", email: "cascade@example.com",
       notes: "Former restaurant space with grease trap and commercial kitchen infrastructure in place. High potential for a food and beverage concept."
@@ -660,6 +694,53 @@
     return "badge-partial";
   }
 
+  /** Human-readable marker confidence shown next to each address */
+  function getLocationLabel(b) {
+    if (!b.location || b.location.precision !== "approximate") {
+      return "Verified marker";
+    }
+    return "Approximate marker";
+  }
+
+  /** CSS class for the marker confidence pill */
+  function getLocationClass(b) {
+    return b.location && b.location.precision === "approximate"
+      ? "location-note is-approx"
+      : "location-note";
+  }
+
+  /** Keep the map framed around whichever markers are currently visible */
+  function fitMapToVisibleBuildings(items) {
+    if (!items.length) return;
+
+    const bounds = L.latLngBounds(items.map(b => [b.lat, b.lng]));
+    map.fitBounds(bounds.pad(0.18), {
+      maxZoom: 17,
+      animate: true,
+      duration: 0.35,
+    });
+  }
+
+  /** Surface obvious data problems during development */
+  function validateBuildingData(items) {
+    const ids = new Set();
+
+    items.forEach(b => {
+      if (ids.has(b.id)) {
+        console.warn(`Duplicate building id: ${b.id}`);
+      }
+      ids.add(b.id);
+
+      if (!Number.isFinite(b.lat) || !Number.isFinite(b.lng)) {
+        console.warn(`Missing coordinates for ${b.name}`);
+      }
+
+      if (!b.location || !b.location.precision) {
+        console.warn(`Missing location confidence for ${b.name}`);
+      }
+    });
+  }
+
 
   // ==============================================================
   // MAP MARKER ICON
@@ -703,6 +784,7 @@
         <div class="popup-addr">${b.name}</div>
         <span class="badge ${badgeClass}">${b.status}</span>
         <div class="popup-type">${b.type} &nbsp;·&nbsp; ${formatSqft(b.sqft)}</div>
+        <div class="popup-location">${getLocationLabel(b)}</div>
         ${b.status !== "Occupied"
           ? `<div class="popup-rent">${formatRent(b.rent)}</div>`
           : ""
@@ -748,6 +830,7 @@
           <span style="font-size:11px; color:#777;">${b.type}</span>
         </div>
         <div class="sub-detail">${formatSqft(b.sqft)} &nbsp;·&nbsp; ${formatRent(b.rent)}</div>
+        <div class="${getLocationClass(b)}">${getLocationLabel(b)}</div>
       `;
 
       // Clicking a list row selects the building (same as clicking the marker)
@@ -810,6 +893,7 @@
 
     renderList();
     closeDetailPanel(); // reset detail view since selection may no longer be visible
+    fitMapToVisibleBuildings(filtered);
   }
 
 
@@ -892,6 +976,7 @@
       </div>
 
       <div class="detail-address">${b.name}</div>
+      <div class="${getLocationClass(b)}">${getLocationLabel(b)} · ${b.location.source}</div>
 
       <!-- Space specs -->
       <div class="detail-section">
@@ -969,10 +1054,11 @@
   //   4. Render the initial sidebar list
   // ==============================================================
   window.addEventListener("load", function () {
+    validateBuildingData(buildings);
 
     // Initialize map centered on downtown Walla Walla, WA
     // Zoom level 16 shows roughly a 4–5 block radius
-    map = L.map("map", { zoomControl: true }).setView([46.0655, -118.3400], 16);
+    map = L.map("map", { zoomControl: true }).setView([46.0674, -118.3389], 16);
 
     // OpenStreetMap tile layer — free and open source
     // Attribution is required by the OSM tile usage policy
@@ -986,6 +1072,9 @@
 
     // Render the initial listing in the sidebar
     renderList();
+
+    // Frame the real marker spread instead of relying on a stale manual center.
+    fitMapToVisibleBuildings(buildings);
   });
 
 </script>
