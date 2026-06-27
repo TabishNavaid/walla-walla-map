@@ -45,7 +45,7 @@
     },
     {
       id: 3, name: "203 W Main St",
-      lat: 46.0655388, lng: -118.3420822,
+      lat: 46.0655399, lng: -118.3420812,
       location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
       photoAlt: "Historic downtown Walla Walla storefront facade",
@@ -75,7 +75,7 @@
     },
     {
       id: 6, name: "301 W Alder St",
-      lat: 46.0641760, lng: -118.3426560,
+      lat: 46.0641770, lng: -118.3426540,
       location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-commercial-building-01.jpg",
       photoAlt: "Commercial building and parking area in Walla Walla",
@@ -85,7 +85,7 @@
     },
     {
       id: 7, name: "140 S 2nd Ave",
-      lat: 46.0654486, lng: -118.3384625,
+      lat: 46.0654476, lng: -118.3384645,
       location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-industrial-building-01.jpg",
       photoAlt: "Commercial loading building exterior in Walla Walla",
@@ -95,7 +95,7 @@
     },
     {
       id: 8, name: "88 E Alder St",
-      lat: 46.0662020, lng: -118.3375632,
+      lat: 46.0662010, lng: -118.3375652,
       location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-main-street-01.jpg",
       photoAlt: "Downtown Walla Walla storefront along Main Street",
@@ -114,18 +114,18 @@
       notes: "Boutique clothing store."
     },
     {
-      id: 10, name: "175 N 1st Ave",
-      lat: 46.0661631, lng: -118.3372007,
-      location: { precision: "approximate", source: "Nearest matching OSM 1st Ave segment" },
+      id: 10, name: "26 E Main St",
+      lat: 46.0669356, lng: -118.3382313,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-retail-corridor-01.jpg",
       photoAlt: "Commercial building along a Walla Walla retail corridor",
       status: "Vacant", sqft: 1600, rent: 1200, type: "Retail",
       contact: "Valley Properties", phone: "(509) 555-0188", email: "valley@example.com",
-      notes: "One block from the farmers market. High weekend foot traffic. Flexible lease terms available on request."
+      notes: "Main Street commercial address in the downtown core. Flexible lease terms available on request."
     },
     {
       id: 11, name: "250 E Birch St",
-      lat: 46.0657391, lng: -118.3329325,
+      lat: 46.0657383, lng: -118.3329340,
       location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-commercial-building-02.jpg",
       photoAlt: "Street-facing commercial market building in Walla Walla",
@@ -135,7 +135,7 @@
     },
     {
       id: 12, name: "66 S Colville St",
-      lat: 46.0671859, lng: -118.3363073,
+      lat: 46.0671522, lng: -118.3362771,
       location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-commercial-interior-01.jpg",
       photoAlt: "Commercial interior space suitable for a Walla Walla business",
@@ -154,14 +154,94 @@
       notes: "Small, well-located space — great for a pop-up, studio, or micro-retail concept. Recently repainted interior."
     },
     {
-      id: 14, name: "55 W Rose St",
-      lat: 46.0652263, lng: -118.3459125,
-      location: { precision: "approximate", source: "Nearest matching OSM W Rose St segment" },
+      id: 14, name: "6 W Rose St",
+      lat: 46.0678510, lng: -118.3408936,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
       photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
       photoAlt: "Historic downtown Walla Walla streetscape and storefronts",
       status: "Vacant", sqft: 2800, rent: 2000, type: "Mixed-use",
       contact: "Cascade Properties", phone: "(509) 555-0142", email: "cascade@example.com",
-      notes: "Former restaurant space with grease trap and commercial kitchen infrastructure in place. High potential for a food and beverage concept."
+      notes: "Prominent Rose Street commercial address near the downtown core. High potential for a food, hospitality, or visitor-serving concept."
+    },
+    {
+      id: 15, name: "7 E Main St",
+      lat: 46.0671945, lng: -118.3389487,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-01.jpg",
+      photoAlt: "Downtown Walla Walla storefront along Main Street",
+      status: "Vacant", sqft: 950, rent: 850, type: "Retail",
+      contact: "Valley Properties", phone: "(509) 555-0188", email: "valley@example.com",
+      notes: "Small street-facing retail space near the downtown core. Good fit for a specialty shop, service counter, or compact office showroom."
+    },
+    {
+      id: 16, name: "101 W Alder St",
+      lat: 46.0652070, lng: -118.3400590,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-building-01.jpg",
+      photoAlt: "Commercial building and parking area in Walla Walla",
+      status: "Partial", sqft: 2200, rent: 1300, type: "Office",
+      contact: "WW Commercial Realty", phone: "(509) 555-0198", email: "info@wwcommercial.com",
+      notes: "Professional office building with one suite available. Shared entry, flexible tenant improvements, and nearby public parking."
+    },
+    {
+      id: 17, name: "28 E Rose St",
+      lat: 46.0677054, lng: -118.3394014,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-storefront-01.jpg",
+      photoAlt: "Historic downtown Walla Walla storefront facade",
+      status: "Occupied", sqft: 3400, rent: null, type: "Mixed-use",
+      contact: null, phone: null, email: null,
+      notes: "Active mixed-use commercial building with ground-floor business space and upper-level occupancy."
+    },
+    {
+      id: 18, name: "16 N 2nd Ave",
+      lat: 46.0673144, lng: -118.3397100,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-retail-corridor-01.jpg",
+      photoAlt: "Commercial building along a Walla Walla retail corridor",
+      status: "Vacant", sqft: 1400, rent: 1050, type: "Retail",
+      contact: "Main Street Realty", phone: "(509) 555-0177", email: "main@example.com",
+      notes: "Narrow retail bay with display-window potential and straightforward access from the sidewalk."
+    },
+    {
+      id: 19, name: "225 W Alder St",
+      lat: 46.0645932, lng: -118.3416004,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-building-02.jpg",
+      photoAlt: "Street-facing commercial market building in Walla Walla",
+      status: "Occupied", sqft: 1900, rent: null, type: "Office",
+      contact: null, phone: null, email: null,
+      notes: "Currently leased as professional services office space."
+    },
+    {
+      id: 20, name: "38 E Birch St",
+      lat: 46.0642600, lng: -118.3366573,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-commercial-interior-01.jpg",
+      photoAlt: "Commercial interior space suitable for a Walla Walla business",
+      status: "Vacant", sqft: 2600, rent: 1900, type: "Mixed-use",
+      contact: "Downtown Dev Group", phone: "(509) 555-0165", email: "ddg@example.com",
+      notes: "Flexible mixed-use space with room for customer-facing activity plus back-of-house operations."
+    },
+    {
+      id: 21, name: "119 N Palouse St",
+      lat: 46.0703214, lng: -118.3369633,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-industrial-building-01.jpg",
+      photoAlt: "Commercial loading building exterior in Walla Walla",
+      status: "Partial", sqft: 4200, rent: 2100, type: "Office",
+      contact: "Cascade Properties", phone: "(509) 555-0142", email: "cascade@example.com",
+      notes: "Larger commercial property with a partially available office and operations suite."
+    },
+    {
+      id: 22, name: "312 E Alder St",
+      lat: 46.0675977, lng: -118.3328411,
+      location: { precision: "exact", source: "OpenStreetMap geocode" },
+      photo: "assets/images/walla-walla-main-street-01.jpg",
+      photoAlt: "Downtown Walla Walla storefront along Main Street",
+      status: "Vacant", sqft: 1200, rent: 950, type: "Retail",
+      contact: "Eastside Holdings", phone: "(509) 555-0122", email: "east@example.com",
+      notes: "Modest retail suite on the eastern edge of the downtown study area. Suitable for a pop-up, studio, or appointment-based storefront."
     },
   ];
 
@@ -366,7 +446,7 @@
   // ==============================================================
   // RENDER SIDEBAR LIST
   // Rebuilds the left-panel listing from the current `filtered`
-  // array. Showing every filtered sample listing makes status
+  // array. Showing every filtered listing makes status
   // search and the occupied filter behave consistently.
   // ==============================================================
   function renderList() {
@@ -437,7 +517,7 @@
 
     const subtitle = document.getElementById("panel-subtitle");
     if (subtitle) {
-      subtitle.textContent = `${filtered.length} sample ${filtered.length === 1 ? "listing" : "listings"} shown.`;
+      subtitle.textContent = `${filtered.length} ${filtered.length === 1 ? "listing" : "listings"} shown.`;
     }
   }
 
@@ -609,7 +689,7 @@
           <div class="detail-row"><span>Property mgr</span><span>${b.contact}</span></div>
           <div class="detail-row"><span>Phone</span><span>${b.phone || "Not listed"}</span></div>
           <div class="detail-row"><span>Email</span><span style="font-size:11px;">${b.email || "Not listed"}</span></div>
-        ` : `<div class="notes-box">No contact information is listed for this sample occupied space.</div>`}
+        ` : `<div class="notes-box">No contact information is listed for this occupied space.</div>`}
         ${hasEmail ? `<a class="contact-button" href="mailto:${b.email}?subject=${encodeURIComponent("Downtown Walla Walla listing inquiry: " + b.name)}">Contact property manager</a>` : ""}
       </div>
 
@@ -633,7 +713,7 @@
     document.getElementById("listing-view").classList.remove("hidden");
     document.getElementById("panel-header").innerHTML = `
       <strong>Listings</strong>
-      <span id="panel-subtitle">Browse sample listings and select a marker for details.</span>
+      <span id="panel-subtitle">Browse listings and select a marker for details.</span>
     `;
 
     selectedId = null;
@@ -724,4 +804,3 @@
     // Frame the real marker spread instead of relying on a stale manual center.
     fitMapToVisibleBuildings(buildings);
   });
-

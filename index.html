@@ -13,7 +13,7 @@
     ----------------
     This is a front-end prototype built to demonstrate the core
     concept for the Economic Vitality Committee's website project.
-    All building data below is SAMPLE / PLACEHOLDER, in a real
+    All building data below is DEMO DATA, in a real
     deployment this would be fetched from a database or a managed
     spreadsheet (e.g. Google Sheets API, Airtable, or a simple
     backend like Supabase).
@@ -41,7 +41,7 @@
     - Embed as an iframe on downtownww.com
     - Add photo uploads per listing
     - Add sq ft range slider filter
-    - Replace sample contact/listing data with a live verified inventory
+    - Replace demo contact/listing data with a live verified inventory
 
     Last updated: June 2026
     ============================================================
@@ -69,10 +69,10 @@
     <!-- App title and project context -->
     <div class="title-block">
       <div class="title-meta">
-        <span class="data-pill">Prototype / Sample Data</span>
+        <span class="data-pill">Prototype Dataset</span>
       </div>
       <h1>Downtown Walla Walla — Vacancy Map</h1>
-      <div class="subtitle">Explore sample downtown commercial spaces by status, size, rent, and type.</div>
+      <div class="subtitle">Explore downtown commercial spaces by status, size, rent, and type.</div>
     </div>
 
     <!-- Filter controls — all three are read together in applyFilters() -->
@@ -169,16 +169,16 @@
 
       <div id="panel-header">
         <strong>Listings</strong>
-        <span id="panel-subtitle">Browse sample listings and select a marker for details.</span>
+        <span id="panel-subtitle">Browse listings and select a marker for details.</span>
       </div>
 
       <div id="listing-view">
         <div class="listing-tools">
           <label class="search-label" for="f-search">Search listings</label>
-          <input id="f-search" type="search" placeholder="Address, status, type, or notes" />
+          <input id="f-search" type="search" aria-label="Search by address, status, type, or notes" />
         </div>
 
-        <!-- Scrollable list of filtered sample buildings -->
+        <!-- Scrollable list of filtered buildings -->
         <div id="listing"></div>
 
         <!-- Shown when filters return no results -->
@@ -188,7 +188,7 @@
         </div>
 
         <p class="prototype-note">
-          This prototype uses sample data. A production version would connect to a verified property database or staff-managed spreadsheet.
+          This prototype uses demo data. A production version would connect to a verified property database or staff-managed spreadsheet.
           Images are Walla Walla reference photos for prototype demonstration only and may not depict the exact listed property.
         </p>
       </div>
