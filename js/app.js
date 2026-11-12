@@ -155,7 +155,7 @@ const plural = (n, word) => `${n} ${n === 1 ? word : word + "s"}`;
 const debounce = (fn, ms) => { let t; return () => { clearTimeout(t); t = setTimeout(fn, ms); }; };
 
 let map, markerLayer, buildings = [], visible = [], markers = {};
-let selectedId = null, returnFocus = null, pendingFit = null, hasBoundary = false;
+let selectedId = null, returnFocus = null, pendingFit = null, hasBoundary = false, spread = null;
 
 // Add what the page needs: street for grouping, rollup, display names, search text.
 function prepare(list) {
@@ -210,7 +210,7 @@ function addMarker(b) {
     riseOnHover: true,
   })
     .bindTooltip(`<strong>${esc(b.address)}</strong><br>${summary}`, { direction: "top", offset: [0, -8] })
-    .on("click", () => select(b.id, marker.getElement()))
+    .on("click", () => clickMarker(b, marker))
     .on("add", () => {
       const el = marker.getElement();
       el.setAttribute("role", "button");
@@ -218,10 +218,41 @@ function addMarker(b) {
       el.classList.toggle("is-active", b.id === selectedId);
       // Leaflet only handles Enter on markers that have a popup
       el.addEventListener("keydown", e => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(b.id, el); }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); collapse(); select(b.id, el); }
       });
     });
   markers[b.id] = marker;
+}
+
+// Markers closer than their own size overlap. A mouse click on one of them fans a small group
+// out in a circle (the next click picks one) or zooms in on a big one. Keyboard users reach
+// each marker directly, so Enter always opens it.
+function clickMarker(b, marker) {
+  if (spread?.ids.has(b.id)) return select(b.id, marker.getElement());
+  collapse();
+  const here = map.latLngToContainerPoint(b.pos);
+  const group = Object.keys(markers).map(id => buildings[id - 1])
+    .filter(o => markerLayer.hasLayer(markers[o.id]) && map.latLngToContainerPoint(o.pos).distanceTo(here) < 16);
+  if (group.length < 2) return select(b.id, marker.getElement());
+  if (group.length > 8) return map.flyToBounds(L.latLngBounds(group.map(o => o.pos)).pad(0.3), { maxZoom: 19, duration: 0.5 });
+
+  const centre = group.map(o => map.latLngToContainerPoint(o.pos)).reduce((a, p) => a.add(p)).divideBy(group.length);
+  const radius = Math.max(26, group.length * 9);
+  const legs = L.layerGroup().addTo(map);
+  group.forEach((o, i) => {
+    const angle = (2 * Math.PI * i) / group.length - Math.PI / 2;
+    const to = map.containerPointToLatLng(centre.add(L.point(radius * Math.cos(angle), radius * Math.sin(angle))));
+    L.polyline([o.pos, to], { color: "#1d3542", weight: 1.5, interactive: false }).addTo(legs);
+    markers[o.id].setLatLng(to);
+  });
+  spread = { ids: new Set(group.map(o => o.id)), legs };
+}
+
+function collapse() {
+  if (!spread) return;
+  spread.ids.forEach(id => markers[id].setLatLng(buildings[id - 1].pos));
+  spread.legs.remove();
+  spread = null;
 }
 
 // A CSS class rather than setIcon(), which would replace the element and lose keyboard focus.
@@ -251,6 +282,7 @@ function applyFilters(announce = true) {
       (status === "all" || s.status === status) && (!cats.length || cats.includes(s.category)) && s.search.includes(query)) }))
     .filter(v => v.matches.length);
 
+  collapse();
   markerLayer.clearLayers();
   visible.forEach(({ b }) => markers[b.id] && markerLayer.addLayer(markers[b.id]));
 
@@ -422,17 +454,21 @@ async function loadData() {
 }
 
 // Draw the downtown outline if the file has a shape; otherwise skip it quietly.
+// Outside downtown is dimmed by a world-sized polygon with downtown cut out as a hole.
 async function loadBoundary() {
   try {
     const geojson = await (await fetch("data/downtown-boundary.geojson")).json();
-    const layer = L.geoJSON(geojson, {
-      interactive: false,
-      style: { color: "#1d3542", weight: 2.5, dashArray: "6 5", fillColor: "#1d3542", fillOpacity: 0.04 },
-    });
-    if (!layer.getLayers().length) return;
+    const rings = (geojson.features || [geojson]).map(f => f.geometry || f)
+      .flatMap(g => g.type === "Polygon" ? [g.coordinates[0]] : g.type === "MultiPolygon" ? g.coordinates.map(p => p[0]) : [])
+      .map(ring => ring.map(([lng, lat]) => [lat, lng]));
+    if (!rings.length) return;
+    const world = [[-89, -179], [-89, 179], [89, 179], [89, -179]];
+    L.polygon([world, ...rings], { stroke: false, fillColor: "#1d3542", fillOpacity: 0.12, interactive: false }).addTo(map);
+    // A white halo under a dark line keeps the outline visible on light and dark tiles
+    L.polyline(rings, { color: "#fff", weight: 7, opacity: 0.85, interactive: false }).addTo(map);
+    L.polyline(rings, { color: "#1d3542", weight: 3, interactive: false }).addTo(map);
     hasBoundary = true;
-    layer.addTo(map);
-    fit(layer.getBounds(), { padding: [12, 12] });
+    fit(L.latLngBounds(rings.flat()), { padding: [12, 12] });
     document.querySelector(".legend-boundary").hidden = false;
   } catch {}
 }
@@ -444,6 +480,7 @@ function start() {
     maxZoom: 19,
   }).addTo(map);
   markerLayer = L.layerGroup().addTo(map);
+  map.on("movestart zoomstart click", collapse);   // a fanned-out group closes when the map changes
 
   const legend = L.control({ position: "bottomleft" });
   legend.onAdd = () => Object.assign(document.createElement("div"), {

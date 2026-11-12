@@ -27,7 +27,7 @@ A static Leaflet map of downtown buildings, the businesses inside, and which spa
 4. **Sharing:** share the sheet with staff as Editors, with general access left *Restricted*.
 5. **Publish:** **File → Share → Publish to web** → choose the **Map** tab (not the entire document) → *Comma-separated values (.csv)*. Tick *Automatically republish*, publish, and paste the link into `js/config.js`.
 6. Optional: install `apps-script/geocode.gs` to fill in map pins automatically (steps at the top of the file).
-7. **Boundary:** to show the downtown outline, trace it at [geojson.io](https://geojson.io) and save it over `data/downtown-boundary.geojson`. An empty file is skipped.
+7. **Boundary:** `data/downtown-boundary.geojson` is the City's official "Downtown Outline" (2008 map), rebuilt along OpenStreetMap streets, alleys and Mill Creek. To change it, edit the file at [geojson.io](https://geojson.io); an empty file is skipped.
 
 To preview locally, run `python3 -m http.server` in this folder and open http://localhost:8000.
 

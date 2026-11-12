@@ -242,7 +242,7 @@ select:hover, .chip-menu summary:hover, .panel-toggle:hover { border-color: var(
 }
 .map-legend strong { display: block; margin-bottom: 5px; color: var(--navy); }
 .legend-item { display: flex; align-items: center; gap: 7px; margin-top: 4px; }
-.legend-line { width: 14px; border-top: 2.5px dashed var(--navy); }
+.legend-line { width: 16px; border-top: 3px solid var(--navy); box-shadow: 0 0 0 1.5px #fff; }
 .leaflet-control-attribution a { color: #2c5b70; }
 
 @media (prefers-reduced-motion: reduce) {
