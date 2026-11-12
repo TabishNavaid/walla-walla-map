@@ -1,0 +1,15 @@
+Address,Unit,Business Name,Needs review,Private note
+13 1/2 E Main St,,,TRUE,Building-level row for 13 1/2 E Main St - keep or delete?
+21 E Main St,,Tarragon Northwest,TRUE,Marked not occupied but a business is named - closed tasting room?
+23 E Main St,,Otis Kenyon,TRUE,Marked not occupied but a business is named - closed tasting room?
+31 E Main St,,33 East Main Street,TRUE,Business Name is an address ('33 East Main Street') and the address repeats 31 E Main St
+33 E Main St,,Land Title,TRUE,"Land Title is normally a title company, not a collection agency - confirm usage?"
+Quinn Building (street address needed),,Quinn Building,TRUE,Address missing (Quinn Building space).
+Quinn Building (street address needed),,Quinn Building,TRUE,Address missing (Quinn Building space); may duplicate the row above.
+109 E Main St,C,Sweets Shoppe,TRUE,Sweets Shoppe' listed as clothing
+6 N 2nd Ave,206,,TRUE,Occupant unknown.
+102 E Alder St,,,TRUE,Occupancy unknown.
+129 E Alder St,,Walla Walla Summer Theater,TRUE,Suite number unknown.
+129 E Alder St,,,TRUE,Suite unknown; residential use unconfirmed.
+2 S 1st Ave,301,WaFd,TRUE,Business name unconfirmed (entered as 'WaFed???').
+49 S Spokane St,,,TRUE,No information recorded for this address.

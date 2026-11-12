@@ -1,214 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--
-    ============================================================
-    Downtown Walla Walla — Commercial Vacancy Map (Prototype)
-    ============================================================
-    Project:  Interactive Map of Downtown Walla Walla
-    Sponsor:  Prof. Wisnu Sugiarto, Economics Dept., Whitman College
-    Client:   Downtown Walla Walla Foundation (downtownww.com)
-
-    Developer notes:
-    ----------------
-    This is a front-end prototype built to demonstrate the core
-    concept for the Economic Vitality Committee's website project.
-    All building data below is DEMO DATA, in a real
-    deployment this would be fetched from a database or a managed
-    spreadsheet (e.g. Google Sheets API, Airtable, or a simple
-    backend like Supabase).
-
-    Tech stack:
-    -----------
-    - Leaflet.js v1.9.4  → open-source mapping library (no API key needed)
-    - OpenStreetMap tiles → free map tiles, attribution required
-    - Vanilla JS / HTML / CSS → no build tools, runs in any browser
-
-    Known limitations of this prototype:
-    -------------------------------------
-    1. Building data is hardcoded — needs a real DB or CMS backend
-    2. No admin interface for the Foundation to update listings
-    3. No authentication — everything is public read-only for now
-    4. Map marker positions are based on OSM geocoding, not a verified
-       commercial property dataset — all locations should be verified
-       before going live, and ideally there would be a way for staff to
-       manually adjust marker positions if needed.
-
-    Next steps (for full project scope):
-    -------------------------------------
-    - Connect to a live data source (Airtable or Google Sheets)
-    - Add an admin panel so Foundation staff can add/edit listings
-    - Embed as an iframe on downtownww.com
-    - Add photo uploads per listing
-    - Add sq ft range slider filter
-    - Replace demo contact/listing data with a live verified inventory
-
-    Last updated: June 2026
-    ============================================================
-  -->
-
+  <!-- Downtown Walla Walla business & vacancy map, for the Downtown Walla Walla Foundation.
+       Data comes from a published Google Sheet (link in js/config.js); js/app.js does the rest.
+       Embedded on downtownww.com in an iframe; it fills whatever height the iframe gives it. -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Downtown Walla Walla — Vacancy Map</title>
-
-  <!-- Leaflet CSS: styles for the map container and default controls -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
+  <title>Downtown Walla Walla — Business &amp; Vacancy Map</title>
+  <meta name="description" content="Map of every downtown Walla Walla building, the businesses inside, and which spaces are vacant." />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+<a class="skip-link" href="#listing-heading">Skip the map and go to the list of buildings</a>
 
 <div id="app">
-
-  <!-- ============================================================
-       TOP BAR
-       Contains: app title, filter controls, and live stat pills
-  ============================================================= -->
-  <div id="topbar">
-
-    <!-- App title and project context -->
+  <header id="topbar">
     <div class="title-block">
-      <div class="title-meta">
-        <span class="data-pill">Prototype Dataset</span>
-      </div>
-      <h1>Downtown Walla Walla — Vacancy Map</h1>
-      <div class="subtitle">Explore downtown commercial spaces by status, size, rent, and type.</div>
+      <h1>Downtown Walla Walla — Business &amp; Vacancy Map</h1>
+      <p class="subtitle">Every downtown building, the businesses inside, and the spaces available.</p>
     </div>
 
-    <!-- Filter controls — all three are read together in applyFilters() -->
-    <div class="filters">
+    <div class="filters" role="group" aria-label="Filters">
       <div class="filter-group">
-        <label>Status</label>
+        <label for="f-status">Space status</label>
         <select id="f-status">
-          <option value="all">All statuses</option>
-          <option value="Vacant">Vacant</option>
-          <option value="Partial">Partial vacancy</option>
-          <option value="Occupied">Occupied</option>
+          <option value="all">Any status</option>
+          <option value="vacant">Vacant</option>
+          <option value="occupied">Occupied</option>
+          <option value="unknown">Unknown</option>
         </select>
       </div>
-
       <div class="filter-group">
-        <label>Space type</label>
-        <select id="f-type">
-          <option value="all">All types</option>
-          <option value="Retail">Retail</option>
-          <option value="Office">Office</option>
-          <option value="Mixed-use">Mixed-use</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label>Max rent / mo</label>
-        <select id="f-rent">
-          <option value="0">Any price</option>
-          <option value="1000">Under $1,000</option>
-          <option value="1500">Under $1,500</option>
-          <option value="2000">Under $2,000</option>
-          <option value="3000">Under $3,000</option>
-        </select>
+        <span class="filter-label" id="f-category-label">Category</span>
+        <details id="f-category" class="chip-menu">
+          <summary aria-describedby="f-category-label">
+            <span class="visually-hidden">Category: </span><span id="f-category-summary">All categories</span>
+          </summary>
+          <fieldset class="chip-panel">
+            <legend class="visually-hidden">Show businesses in these categories</legend>
+            <div id="f-category-chips" class="chips"></div>
+            <button id="f-category-clear" class="text-button" type="button">Show all categories</button>
+          </fieldset>
+        </details>
       </div>
     </div>
 
-    <!-- Live stat pills — counts update when filters are applied -->
-    <div id="stats">
-      <div class="stat stat-vacant">
-        <div class="dot" style="background:#2f7d4f;"></div>
-        <span id="cnt-v">0</span>&nbsp;vacant
-      </div>
-      <div class="stat stat-partial">
-        <div class="dot" style="background:#d99a22;"></div>
-        <span id="cnt-p">0</span>&nbsp;partial
-      </div>
-      <div class="stat stat-occupied">
-        <div class="dot" style="background:#b94a3a;"></div>
-        <span id="cnt-o">0</span>&nbsp;occupied
-      </div>
+    <ul id="stats" aria-label="Buildings shown, by status"></ul>
+    <button id="panel-toggle" class="panel-toggle" type="button" aria-controls="panel" aria-expanded="true">Hide list</button>
+  </header>
+
+  <section id="kpis" aria-label="Summary of what's shown">
+    <div class="kpi-card"><span>Buildings</span><strong id="kpi-buildings">–</strong></div>
+    <div class="kpi-card"><span>Businesses</span><strong id="kpi-businesses">–</strong></div>
+    <div class="kpi-card"><span>Vacant spaces</span><strong id="kpi-vacant">–</strong></div>
+    <div class="kpi-card"><span>Status unknown</span><strong id="kpi-unknown">–</strong></div>
+  </section>
+
+  <main id="main">
+    <div id="map-col">
+      <div id="map" role="region" aria-label="Map of downtown buildings. Each building is also in the list."></div>
+      <p class="map-note">Pin locations are approximate.</p>
     </div>
 
-    <button id="panel-toggle" class="panel-toggle" type="button" aria-controls="panel" aria-expanded="true">
-      Hide listings
-    </button>
-
-  </div><!-- /#topbar -->
-
-  <!-- Compact KPI strip for the current filtered dataset -->
-  <div id="kpis" aria-label="Filtered property summary">
-    <div class="kpi-card">
-      <span>Total properties</span>
-      <strong id="kpi-total">0</strong>
-    </div>
-    <div class="kpi-card">
-      <span>Available spaces</span>
-      <strong id="kpi-available">0</strong>
-    </div>
-    <div class="kpi-card">
-      <span>Occupied spaces</span>
-      <strong id="kpi-occupied">0</strong>
-    </div>
-    <div class="kpi-card">
-      <span>Est. available sq ft</span>
-      <strong id="kpi-sqft">0</strong>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       MAIN CONTENT: MAP + SIDEBAR PANEL
-  ============================================================= -->
-  <div id="main">
-
-    <!-- Leaflet map renders here. Initialized in JS below. -->
-    <div id="map"></div>
-
-    <!-- =========================================================
-         SIDEBAR PANEL
-         Two child sections that swap visibility:
-           #listing     → default scrollable list of spaces
-           #detail-panel → shown when a building is selected
-    ========================================================== -->
-    <div id="panel">
-
-      <div id="panel-header">
-        <strong>Listings</strong>
-        <span id="panel-subtitle">Browse listings and select a marker for details.</span>
-      </div>
-
+    <aside id="panel" aria-label="Buildings">
       <div id="listing-view">
+        <div id="panel-header">
+          <h2 id="listing-heading" tabindex="-1">Buildings</h2>
+          <span id="panel-subtitle">Loading…</span>
+          <p id="data-status" class="data-status" role="status" hidden></p>
+        </div>
         <div class="listing-tools">
-          <label class="search-label" for="f-search">Search listings</label>
-          <input id="f-search" type="search" aria-label="Search by address, status, type, or notes" />
+          <label class="search-label" for="f-search">Search</label>
+          <input id="f-search" type="search" autocomplete="off" aria-describedby="f-search-hint" />
+          <span id="f-search-hint" class="search-hint">Business name, address, or use (e.g. “coffee”)</span>
         </div>
-
-        <!-- Scrollable list of filtered buildings -->
+        <p id="results-status" class="visually-hidden" role="status" aria-live="polite"></p>
         <div id="listing"></div>
-
-        <!-- Shown when filters return no results -->
-        <div id="empty">
-          <strong>No matching spaces yet.</strong>
-          Try changing a filter or searching for a broader term.
+        <div id="empty" hidden>
+          <strong>No buildings match.</strong>
+          Try a different search or fewer filters.
+          <button id="clear-filters" class="text-button" type="button">Clear all filters</button>
         </div>
-
-        <p class="prototype-note">
-          This prototype uses demo data. A production version would connect to a verified property database or staff-managed spreadsheet.
-          Images are Walla Walla reference photos for prototype demonstration only and may not depict the exact listed property.
-        </p>
       </div>
 
-      <!-- Detail view: hidden until a building is clicked -->
-      <div id="detail-panel">
-        <div id="detail-back">&#8592; Back to listings</div>
+      <div id="detail-panel" hidden>
+        <button id="detail-back" type="button">&#8592; Back to list</button>
         <div id="detail-content"></div>
       </div>
+    </aside>
+  </main>
+</div>
 
-    </div><!-- /#panel -->
-
-  </div><!-- /#main -->
-
-</div><!-- /#app -->
-
-
-<!-- Leaflet JS: the mapping library. Loaded from CDN. -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script src="js/main.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

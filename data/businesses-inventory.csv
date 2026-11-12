@@ -1,0 +1,136 @@
+Address,Unit/Suite #,Occupied?,Business Name,Current Use,Category,Notes,Needs Review,Source Row
+25 S Colville St,,No,,,Vacant / Closed,Former Gift & Yarn store,,3
+1 E Main St,,Yes,Premier Mortgage Resources,Real estate,Real Estate,,,4
+3 E Main St,,Yes,Sotheby's International Realty,Real estate,Real Estate,,,5
+5 E Main St,,Yes,Title One,Real estate,Real Estate,,,6
+7 E Main St,,Yes,Inland Octopus,Toy store,Retail,,,7
+11 E Main St,,Yes,Brights Candies,Candy shop,Restaurant / Food & Drink,,,8
+13 E Main St,,Yes,Tucannon Tavern,Restaurant,Restaurant / Food & Drink,,,9
+13 1/2 E Main St,,Yes,,Offices,Professional Services / Offices,Building-level entry; tenants listed in rows below. Use unclear from street.,Building-level row for 13 1/2 E Main St - keep or delete?,10
+13 1/2 E Main St,,Yes,Love Hair & Skincare Walla Walla,Hair and skincare,Personal Services,,,11
+13 1/2 E Main St,,Yes,Okanogan Label & Print,Estate printery,Professional Services / Offices,,,12
+13 1/2 E Main St,,Yes,Walla Walla Symphony,WW symphony offices,"Arts, Culture & Entertainment",,,13
+13 1/2 E Main St,,Yes,NexGen Technology Services,Tech business offices,Professional Services / Offices,,,14
+13 1/2 E Main St,,Yes,Carson Wealth,Wealth management offices,Finance / Banking,,,15
+13 1/2 E Main St,,Unknown,,,Unknown,Unclear - fogged-out windows,,16
+13 1/2 E Main St,,Yes,United Way of the Blue Mountains,Nonprofit organization offices,Civic / Nonprofit / Religious,,,17
+31 E Main St,,Yes,Proper | House of Bones,Winery,Wine / Tasting Room,,,18
+31 E Main St,,Yes,EG Drafting,Architectural design and drafting business,Professional Services / Offices,Shares a unit with Shivell (next row),,19
+31 E Main St,,Yes,Shivell,Construction company,Professional Services / Offices,,,20
+15 E Main St,,Yes,Thirty Fifth + Butter,Clothing store,Retail,,,21
+17 E Main St,,No,Cayuse,Wine tasting,Vacant / Closed,Sold out; expected to reopen at some point,,22
+21 E Main St,,No,Tarragon Northwest,Wine tasting,Vacant / Closed,,Marked not occupied but a business is named - closed tasting room?,23
+23 E Main St,,No,Otis Kenyon,Wine tasting,Vacant / Closed,,Marked not occupied but a business is named - closed tasting room?,24
+25 E Main St,,Yes,Henry Earl Estate Wines,Wine,Wine / Tasting Room,,,25
+31 E Main St,,Yes,33 East Main Street,Wine,Wine / Tasting Room,,Business Name is an address ('33 East Main Street') and the address repeats 31 E Main St ,26
+33 E Main St,,Yes,Land Title,Collection agency,Finance / Banking,,"Land Title is normally a title company, not a collection agency - confirm usage?",27
+39 E Main St,,Yes,Plumbo Cellars,Wine,Wine / Tasting Room,,,28
+43 E Main St,,Yes,Gard Estate Wines,Wine,Wine / Tasting Room,,,29
+,,No,Quinn Building,For lease,Vacant / Closed,,Address missing (Quinn Building space).,30
+,,No,Quinn Building,For lease,Vacant / Closed,,Address missing (Quinn Building space); may duplicate the row above.,31
+51 E Main St,,Yes,Forward Boutique,Clothing,Retail,,,32
+51 & 53 E Main St,,Yes,51 East Main Downtown Condos,Condos,Residential,2nd and 3rd floors,,33
+57 E Main St,,Yes,The Witlof,Restaurant,Restaurant / Food & Drink,,,34
+61 E Main St,,Yes,Studio Opal Boutique,Clothing,Retail,,,35
+103 E Main St,,Yes,Walla Walla Clothing Co.,Clothing,Retail,,,36
+109 E Main St,A,Yes,,Offices,Professional Services / Offices,Office entrance (upper floors),,37
+109 E Main St,B,Yes,Fiasco On Main,Restaurant,Restaurant / Food & Drink,,,38
+109 E Main St,C,Yes,Sweets Shoppe,Clothing,Retail,,Sweets Shoppe' listed as clothing ,39
+111 E Main St,,Yes,Lost Clothing and Shoe Co.,Clothing,Retail,,,40
+113 E Main St,,No,,,Vacant / Closed,Renovation under way,,41
+115 E Main St,,Yes,Tra Vigne,Antique shop,Retail,,,42
+121 E Main St,,No,,Building for sale,Vacant / Closed,,,43
+123 E Main St,,Yes,Dama,Wine,Wine / Tasting Room,,,44
+201 E Main St,,Yes,Bacon and Eggs,Restaurant,Restaurant / Food & Drink,,,45
+205 E Main St,,Yes,Atlas Homes,Real estate,Real Estate,,,46
+207 E Main St,,No,,Not in use; not for sale,Vacant / Closed,,,47
+221 E Main St,,Yes,Black Pearl,Restaurant,Restaurant / Food & Drink,,,48
+225 E Main St,,Yes,Lumina Studio,Lighting business,Professional Services / Offices,Open Tuesdays and Wednesdays by appointment,,49
+229 E Main St,,Yes,Bledsoe Family Winery,Wine,Wine / Tasting Room,,,50
+6 N 2nd Ave,200,Yes,Basalt Legal PLLC,Attorney office,Professional Services / Offices,,,51
+6 N 2nd Ave,202,Yes,Somatik Strands,Holistic hair and breath,Personal Services,,,52
+6 N 2nd Ave,206,Yes,,,Unknown,No signage; furnishings inside - may be extra space for unit 202,Occupant unknown.,53
+6 N 2nd Ave,301–304,Yes,Moreno & Castillo Construction,Construction business office,Professional Services / Offices,304 is the main entrance,,54
+6 N 2nd Ave,308,Yes,,Private storage,Other,,,55
+6 N 2nd Ave,"312, 314",Yes,Northwest Multiple Listing Service,Real estate office,Real Estate,Temporarily closed,,56
+6 N 2nd Ave,311,Yes,The Moth Loft,Piercing and tattoo shop,Personal Services,No signage,,57
+4 N Colville St / 103 E Main St,B202,Yes,Leyzer Cuts,Hairdresser,Personal Services,,,58
+4 N Colville St / 103 E Main St,B203,Yes,LJC Nail Studio + KP Nail Studio,Nail studio,Personal Services,,,59
+4 N Colville St / 103 E Main St,B201,Unknown,,,Unknown,No signage,,60
+4 N Colville St / 103 E Main St,B205,Unknown,,,Unknown,No signage,,61
+4 N Colville St / 103 E Main St,B204,Yes,Handmaid Cleaning,Cleaning company,Personal Services,,,62
+4 N Colville St / 103 E Main St,101,Yes,Foodscape,Food + wine,Wine / Tasting Room,Specific service unknown,,63
+4 N Colville St / 103 E Main St,201,Yes,Living Solutions Counseling,Counseling,Health & Fitness,,,64
+4 N Colville St / 103 E Main St,202,Yes,David Thompson Properties,Property management,Real Estate,,,65
+4 N Colville St / 103 E Main St,303,Yes,Visit Walla Walla,Tourism,"Arts, Culture & Entertainment",,,66
+4 N Colville St / 103 E Main St,304,Yes,Blue Mountain Wellness Integrative Mental Health Therapy,Wellness and therapy,Health & Fitness,Shares unit 304 with Wellness Massage & Lymphatic Drainage,,67
+4 N Colville St / 103 E Main St,304,Yes,Wellness Massage & Lymphatic Drainage,Massage shop,Personal Services,,,68
+4 N Colville St / 103 E Main St,300–301,Yes,Kindling Coworking,Coworking space,Professional Services / Offices,,,69
+4 N Colville St / 103 E Main St,302,Yes,Downtown Walla Walla Foundation,Nonprofit,Civic / Nonprofit / Religious,,,70
+4 N Colville St / 103 E Main St,,No,,,Vacant / Closed,Unmarked unit next to 300,,71
+8 N Colville St,,Yes,Carte Coffee,Coffee,Restaurant / Food & Drink,,,72
+11 N Colville St,,Yes,The Motor Co.,Event venue,"Arts, Culture & Entertainment",,,73
+60 N Colville St,,Yes,Marguerite Walla Walla,Boutique shop,Retail,,,74
+70 N Colville St,103,Yes,Wildlings,Clothing store,Retail,,,75
+70 N Colville St,106,Yes,The Local Bagel,Restaurant,Restaurant / Food & Drink,,,76
+80 N Colville St,,Yes,TMACS,Restaurant,Restaurant / Food & Drink,,,77
+1 S Colville St,1A,Yes,The Refuge Church of Walla Walla,Church,Civic / Nonprofit / Religious,,,78
+3 S Colville St,,Yes,Pine Cone Creamery,Ice cream shop,Restaurant / Food & Drink,,,79
+5 S Colville St,,Yes,"Graze ""A Place to Eat""",Restaurant,Restaurant / Food & Drink,,,80
+16 S Colville St,,Yes,Karaoke Palace,Karaoke,"Arts, Culture & Entertainment",,,81
+30 S Colville St,,Yes,Butcher Butcher Walla Walla,Butcher,Restaurant / Food & Drink,,,82
+31 S Colville St,,No,,,Vacant / Closed,,,83
+33 S Colville St,,Yes,Marcy's Bar & Lounge,Gastropub,Restaurant / Food & Drink,,,84
+34 S Colville St,,Yes,McGovern/Parsons Herb Co.,Herb shop,Retail,,,85
+36 S Colville St,,Yes,Grandma's Kitchen,Restaurant,Restaurant / Food & Drink,,,86
+38 S Colville St,,Yes,Colville Street Patisserie,Pastry shop,Restaurant / Food & Drink,,,87
+1 E Alder St,,Yes,Banner Bank,Bank,Finance / Banking,,,88
+22 E Alder St,,Yes,US Bank,Bank,Finance / Banking,,,89
+27 E Alder St,,Yes,STCU,Credit union,Finance / Banking,,,90
+101 E Alder St,,Yes,Sweetwater Paper & Home,Retail,Retail,,,91
+102 E Alder St,,Unknown,,,Unknown,Old US West Communications building,Occupancy unknown.,92
+105 E Alder St,,Yes,Stone Soup,Restaurant,Restaurant / Food & Drink,,,93
+110 E Alder St,,Yes,East Alder Table,"Cooking classes, events, etc.","Arts, Culture & Entertainment",,,94
+120 E Alder St,,Yes,Digital Heroes,"Comic books, games",Retail,,,95
+126 E Alder St,,Yes,Roach Law Firm,Law firm,Professional Services / Offices,,,96
+128 E Alder St,,Yes,Williams Team Homes,Real estate,Real Estate,,,97
+129 E Alder St,101,Yes,Wheat Art Company,Art classes and art store,"Arts, Culture & Entertainment",,,98
+129 E Alder St,,Yes,Walla Walla Summer Theater,Theater,"Arts, Culture & Entertainment",,Suite number unknown.,99
+129 E Alder St,A,Yes,Walla Walla Dance Company,Dance studio,"Arts, Culture & Entertainment",,,100
+129 E Alder St,,Yes,,Apartments,Residential,,Suite unknown; residential use unconfirmed.,101
+130 E Alder St,,No,,,Vacant / Closed,Formerly a flower shop,,102
+202 E Alder St,,Yes,Argo Auto & Transmission,Auto repair,Personal Services,,,103
+209 E Alder St,,Yes,Counter Side Burgers & Fries,Food truck,Restaurant / Food & Drink,,,104
+209 E Alder St,,Yes,Maple Counter Cafe,Restaurant,Restaurant / Food & Drink,,,105
+210 E Alder St,,Yes,Studio 27 Tattoo + Makeup,Tattoo & makeup,Personal Services,,,106
+212 E Alder St,,Yes,Tavern Ancestrale,Tavern & food,Restaurant / Food & Drink,,,107
+213 E Alder St,,Yes,Liz & Kay Clothing Co.,Clothing boutique,Retail,,,108
+214 E Alder St,,Yes,Stewart's Dry Cleaners,Dry cleaners,Personal Services,,,109
+217 E Alder St,,Yes,Bellevue Healthcare Walla Walla,Medical supply store,Retail,,,110
+220 E Alder St,,Yes,Karate Center,Karate studio,Health & Fitness,,,111
+221 E Alder St,,No,,,Vacant / Closed,,,112
+229 E Alder St,,Yes,Club 24 Walla Walla,Fitness club,Health & Fitness,,,113
+238 E Alder St,,Yes,Walla Walla Public Library,Library,"Arts, Culture & Entertainment",,,114
+2 S 1st Ave,100,Yes,The Garden Window,To-go cafe,Restaurant / Food & Drink,,,115
+2 S 1st Ave,301,Yes,WaFd,Bank offices,Finance / Banking,,Business name unconfirmed (entered as 'WaFed???').,116
+3 S 1st Ave,,Yes,Delmas on the Plaza,Tasting room,Wine / Tasting Room,,,117
+4 S 1st Ave,,Yes,Coffee Perk,Coffee shop,Restaurant / Food & Drink,,,118
+5 S 1st Ave,,Yes,Sweet Basil Pizzeria,Restaurant,Restaurant / Food & Drink,,,119
+6 S 1st Ave,200,Yes,Velvet Label,Marketing & product photography,Professional Services / Offices,,,120
+7 S 1st Ave,,Yes,Yamas,Restaurant,Restaurant / Food & Drink,,,121
+9 S 1st Ave,,Yes,Calliope Creative,Photography studio,Professional Services / Offices,Also houses Nick Page Photography Art Gallery,,122
+11 S 1st Ave,,Yes,World Wide Travel Services,Travel agency,Personal Services,,,123
+2 N Spokane St,,Yes,Elementum Movement,Fitness center,Health & Fitness,,,124
+4 N Spokane St,,Yes,Time & Direction,Wine,Wine / Tasting Room,,,125
+6 N Spokane St,,Yes,Berkshire Hathaway,Real estate,Real Estate,,,126
+9 N Spokane St,,Yes,Belmont Apartments,Apartments,Residential,,,127
+11 S Spokane St,,Yes,Kingfisher Gallery & Custom Framing,Art framing,"Arts, Culture & Entertainment",,,128
+15 S Spokane St,,Yes,The Interior,Cabinet shop,Retail,,,129
+23 S Spokane St,,Yes,Result of a Crush Winery,Wine,Wine / Tasting Room,,,130
+25 S Spokane St,,Yes,Chiangmai Thai Restaurant,Restaurant,Restaurant / Food & Drink,,,131
+29 S Spokane St,,No,,,Vacant / Closed,,,132
+35 S Spokane St,,Yes,House of Smith Wines,Tasting room,Wine / Tasting Room,,,133
+45 S Spokane St,,No,,,Vacant / Closed,,,134
+47 S Spokane St,,Yes,Capital Barber Shop,Barber shop,Personal Services,,,135
+49 S Spokane St,,Unknown,,,Unknown,,No information recorded for this address.,136
+53 S Spokane St,,Yes,Walla Walla Overstock Outlet,Overstock outlet,Retail,,,137
